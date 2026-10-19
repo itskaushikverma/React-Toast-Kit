@@ -1,17 +1,18 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { CircleCheckBig, OctagonAlert } from 'lucide-react';
-import type { Toast } from './types';
+import {
+  ERROR_ICON_CLASS_NAME,
+  EXIT_DURATION_MS,
+  SUCCESS_ICON_CLASS_NAME,
+  TOAST_BASE_STYLE,
+  TOAST_CLASS_NAMES,
+  TOAST_TYPE_STYLES,
+} from '../constants/toast';
 
-type ToastNotificationProps = {
-  toast: Toast;
-  onDismiss: () => void;
-  onRemove: () => void;
-};
-
-const ToastNotification = forwardRef<HTMLDivElement, ToastNotificationProps>(({ toast, onDismiss, onRemove }, ref) => {
+const ToastNotification = forwardRef(({ toast, onDismiss, onRemove }, ref) => {
   const { type, message, isExiting } = toast;
   const [isVisible, setIsVisible] = useState(false);
-  const animationRef = useRef<number | null>(null);
+  const animationRef = useRef(null);
   const onDismissRef = useRef(onDismiss);
   const onRemoveRef = useRef(onRemove);
   onDismissRef.current = onDismiss;
@@ -38,7 +39,7 @@ const ToastNotification = forwardRef<HTMLDivElement, ToastNotificationProps>(({ 
     if (isExiting) {
       const timer = setTimeout(() => {
         onRemoveRef.current();
-      }, 500);
+      }, EXIT_DURATION_MS);
 
       return () => clearTimeout(timer);
     }
@@ -54,54 +55,18 @@ const ToastNotification = forwardRef<HTMLDivElement, ToastNotificationProps>(({ 
     }
   }, [toast.duration, toast.id, isExiting]);
 
-  const getToastStyle = () => {
-    const baseStyle = {
-      padding: '1rem',
-      paddingInline: '1.5rem',
-      borderRadius: '5px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-      width: 'max-content',
-      transform: 'translateX(100%)',
-      opacity: 0,
-    };
-
-    const typeStyles = {
-      normal: {
-        backgroundColor: '#161a30',
-        color: '#ffffff',
-      },
-      success: {
-        backgroundColor: '#388e3c',
-        color: '#ffffff',
-      },
-      error: {
-        backgroundColor: '#fee2e2',
-        color: '#b91c1c',
-      },
-    };
-
-    return { ...baseStyle, ...typeStyles[type] };
-  };
-
-  const getIcon = () => {
-    if (type === 'success') {
-      return <CircleCheckBig className="h-5 w-5 text-white" />;
-    }
-
-    if (type === 'error') {
-      return <OctagonAlert className="h-5 w-5 text-[#b91c1c]" />;
-    }
-
-    return null;
-  };
+  const motionClass = isExiting ? TOAST_CLASS_NAMES.slideOut : isVisible ? TOAST_CLASS_NAMES.slideIn : '';
 
   return (
-    <div ref={ref} className={`toast-notification ${isExiting ? 'toast-slide-out' : isVisible ? 'toast-slide-in' : ''}`} style={getToastStyle()} onClick={onDismiss}>
-      {getIcon()}
-      <div className="toast-message" style={{ flex: 1 }}>
+    <div
+      ref={ref}
+      className={`${TOAST_CLASS_NAMES.notification} ${motionClass}`}
+      style={{ ...TOAST_BASE_STYLE, ...TOAST_TYPE_STYLES[type] }}
+      onClick={onDismiss}
+    >
+      {type === 'success' ? <CircleCheckBig className={SUCCESS_ICON_CLASS_NAME} /> : null}
+      {type === 'error' ? <OctagonAlert className={ERROR_ICON_CLASS_NAME} /> : null}
+      <div className={TOAST_CLASS_NAMES.message} style={{ flex: 1 }}>
         {message}
       </div>
       <button

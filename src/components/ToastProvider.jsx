@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { DEFAULT_TOAST_DURATION_MS } from '../constants/toast';
+import { ToastContext } from '../context/ToastContext';
 import { ToastContainer } from './ToastContainer';
-import { ToastContext } from './ToastContext';
-import type { Toast, ToastType } from './types';
 
-export const ToastProvider = ({ children }: { children?: React.ReactNode }) => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+export const ToastProvider = ({ children }) => {
+  const [toasts, setToasts] = useState([]);
 
-  const addToast = useCallback((message: string, type: ToastType, duration = 4000) => {
+  const addToast = useCallback((message, type, duration = DEFAULT_TOAST_DURATION_MS) => {
     const id = Math.random().toString(36).substring(2, 9);
     const newToast = {
       id,
@@ -19,11 +19,11 @@ export const ToastProvider = ({ children }: { children?: React.ReactNode }) => {
     setToasts((prev) => [...prev, newToast]);
   }, []);
 
-  const removeToast = useCallback((id: string) => {
+  const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
-  const startExitAnimation = useCallback((id: string) => {
+  const startExitAnimation = useCallback((id) => {
     setToasts((prev) => prev.map((toast) => (toast.id === id ? { ...toast, isExiting: true } : toast)));
   }, []);
 
