@@ -1,7 +1,17 @@
 export const DEFAULT_TOAST_TYPE = 'normal';
 export const DEFAULT_TOAST_DURATION_MS = 4000;
 export const EXIT_DURATION_MS = 500;
-export const TOAST_STACK_POSITION = 'top-right';
+export const DEFAULT_TOAST_FONT_FAMILY = 'sans-serif';
+
+export const ToastPosition = Object.freeze({
+  TopLeft: 'top-left',
+  TopCenter: 'top-center',
+  TopRight: 'top-right',
+  BottomLeft: 'bottom-left',
+  BottomRight: 'bottom-right',
+});
+
+export const DEFAULT_TOAST_POSITION = ToastPosition.TopRight;
 
 export const TOAST_CLASS_NAMES = {
   container: 'toast-container',
@@ -11,20 +21,18 @@ export const TOAST_CLASS_NAMES = {
   slideOut: 'toast-slide-out',
 };
 
-export const SUCCESS_ICON_CLASS_NAME = 'h-5 w-5 text-white';
-export const ERROR_ICON_CLASS_NAME = 'h-5 w-5 text-[#b91c1c]';
-
 export const TOAST_BASE_STYLE = {
   padding: '1rem',
   paddingInline: '1.5rem',
-  borderRadius: '5px',
+  borderRadius: '8px',
   display: 'flex',
   alignItems: 'center',
   gap: '0.75rem',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
   width: 'max-content',
-  transform: 'translateX(100%)',
-  opacity: 0,
+  fontFamily: DEFAULT_TOAST_FONT_FAMILY,
+  fontSize: '1rem',
+  fontWeight: 500,
 };
 
 export const TOAST_TYPE_STYLES = {
@@ -51,12 +59,36 @@ export const TOAST_STACK_STYLE = {
 };
 
 export const POSITION_STYLES = {
-  'top-right': { top: '1rem', right: '1rem' },
-  'top-left': { top: '1rem', left: '1rem' },
-  'bottom-right': { bottom: '1rem', right: '1rem' },
-  'bottom-left': { bottom: '1rem', left: '1rem' },
+  [ToastPosition.TopRight]: { top: '1rem', right: '1rem' },
+  [ToastPosition.TopLeft]: { top: '1rem', left: '1rem' },
+  [ToastPosition.TopCenter]: { top: '1rem', left: '50%', transform: 'translateX(-50%)' },
+  [ToastPosition.BottomRight]: { bottom: '1rem', right: '1rem' },
+  [ToastPosition.BottomLeft]: { bottom: '1rem', left: '1rem' },
 };
 
+export function resolveToastPosition(position) {
+  return POSITION_STYLES[position] ? position : DEFAULT_TOAST_POSITION;
+}
+
 export function getPositionStyle(position) {
-  return POSITION_STYLES[position];
+  return POSITION_STYLES[resolveToastPosition(position)];
+}
+
+export function getStackAlign(position) {
+  const resolved = resolveToastPosition(position);
+  if (resolved === ToastPosition.TopCenter) {
+    return 'center';
+  }
+  return resolved.endsWith('right') ? 'flex-end' : 'flex-start';
+}
+
+export function getToastMotion(position) {
+  const resolved = resolveToastPosition(position);
+  if (resolved === ToastPosition.TopCenter) {
+    return { x: '0px', y: '-100%' };
+  }
+  if (resolved.endsWith('left')) {
+    return { x: '-100%', y: '0px' };
+  }
+  return { x: '100%', y: '0px' };
 }

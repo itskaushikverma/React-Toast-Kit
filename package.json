@@ -1,17 +1,39 @@
 {
-  "name": "react-toast-js",
-  "private": true,
-  "version": "0.0.0",
+  "name": "react-toast-kit-js",
+  "version": "0.1.0",
+  "description": "React toast notifications with a provider and a useToast hook.",
   "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/react-toast-kit-js.cjs",
+  "module": "./dist/react-toast-kit-js.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react-toast-kit-js.js",
+      "require": "./dist/react-toast-kit-js.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --config vite.lib.config.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "toast",
+    "notification"
+  ],
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "dependencies": {
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "lucide-react": "^1.59.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
@@ -25,6 +47,8 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "vite": "^8.3.4"
   }
 }

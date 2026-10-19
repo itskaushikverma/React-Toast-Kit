@@ -1,15 +1,19 @@
 import { useCallback, useContext } from 'react';
-import { DEFAULT_TOAST_DURATION_MS, DEFAULT_TOAST_TYPE } from '../constants/toast';
 import { ToastContext } from '../context/ToastContext';
+
+function withType(type, durationOrOptions) {
+  const options = typeof durationOrOptions === 'number' ? { duration: durationOrOptions } : (durationOrOptions ?? {});
+  return { ...options, type };
+}
 
 /**
  * Reads the toast API from the nearest `ToastProvider`.
  * @returns {{
- *   toast: (message: string, options?: import('../types.js').ToastOptions) => void,
- *   success: (message: string, duration?: number) => void,
- *   error: (message: string, duration?: number) => void,
+ *   toast: (message: string, options?: object) => string,
+ *   success: (message: string, durationOrOptions?: number | object) => string,
+ *   error: (message: string, durationOrOptions?: number | object) => string,
  *   dismiss: (id: string) => void,
- *   toasts: import('../types.js').Toast[],
+ *   toasts: object[],
  * }}
  */
 export const useToast = () => {
@@ -19,16 +23,14 @@ export const useToast = () => {
   }
 
   const toast = useCallback(
-    (message, options = { type: DEFAULT_TOAST_TYPE, duration: DEFAULT_TOAST_DURATION_MS }) => {
-      context.addToast(message, options?.type || DEFAULT_TOAST_TYPE, options?.duration);
-    },
+    (message, options) => context.addToast(message, options ?? {}),
     [context],
   );
 
   return {
     toast,
-    success: (message, duration) => context.addToast(message, 'success', duration),
-    error: (message, duration) => context.addToast(message, 'error', duration),
+    success: (message, durationOrOptions) => context.addToast(message, withType('success', durationOrOptions)),
+    error: (message, durationOrOptions) => context.addToast(message, withType('error', durationOrOptions)),
     dismiss: context.startExitAnimation,
     toasts: context.toasts,
   };

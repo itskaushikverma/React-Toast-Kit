@@ -1,19 +1,87 @@
-# React + Vite
+# React Toast Kit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Toast notifications for React. Wrap the tree in `ToastProvider`, then call `useToast()` from any child.
 
-Currently, two official plugins are available:
+## Install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install react-toast-kit-js
+```
 
-## React Compiler
+React 18 or 19 is required and is not bundled with this package.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Usage
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+```jsx
+import { ToastPosition, ToastProvider, useToast } from 'react-toast-kit-js'
 
-## Expanding the ESLint configuration
+function SaveButton() {
+  const { success, toast } = useToast()
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+  return (
+    <>
+      <button onClick={() => success('Saved')}>Save</button>
+      <button
+        onClick={() =>
+          toast('Saved', {
+            duration: 3000,
+            backgroundColor: '#4c1d95',
+            textColor: '#f5f3ff',
+            fontFamily: 'sans-serif',
+            showCloseIcon: true,
+            position: ToastPosition.BottomLeft,
+          })
+        }
+      >
+        Custom
+      </button>
+    </>
+  )
+}
+
+export function App() {
+  return (
+    <ToastProvider position={ToastPosition.TopRight}>
+      <SaveButton />
+    </ToastProvider>
+  )
+}
+```
+
+Styles and animations are injected when a toast renders. There is no CSS file to import.
+
+## API
+
+`useToast()` must be called under `ToastProvider`.
+
+| Method | Description |
+| --- | --- |
+| `toast(message, options?)` | Shows a toast and returns its id. |
+| `success(message, durationOrOptions?)` | Success toast. A number sets the duration. An object uses the same options as `toast`. |
+| `error(message, durationOrOptions?)` | Error toast. |
+| `dismiss(id)` | Starts the exit animation for that toast. |
+| `toasts` | The current toast list. |
+
+`options` and `ToastProvider` props:
+
+| Option | Description |
+| --- | --- |
+| `duration` | Milliseconds before the toast leaves. Defaults to `4000`. `0` keeps it until dismissed. |
+| `icon` | A React node or icon component. `false` hides the icon. Success and error toasts have a default icon. |
+| `textColor` | Text color. |
+| `backgroundColor` | Background color. |
+| `fontFamily` | Font. Defaults to `sans-serif`. |
+| `showCloseIcon` | Shows the close button. Defaults to `true`. The close button always dismisses the toast. |
+| `hideOnClick` | Clicking the toast body dismisses it. Defaults to `true`. |
+| `position` | `ToastPosition.TopLeft`, `TopCenter`, `TopRight`, `BottomLeft`, or `BottomRight`. Defaults to top right. |
+
+A toast slides in from the edge of its position.
+
+## Develop
+
+```bash
+npm install
+npm run dev
+```
+
+`npm run build` writes the publishable files to `dist/`. `npm publish` runs that build first.

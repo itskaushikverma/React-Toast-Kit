@@ -1,122 +1,86 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { Info } from 'lucide-react'
+import { ToastPosition, ToastProvider, useToast } from './index.js'
 
-function App() {
-  const [count, setCount] = useState(0)
+const POSITIONS = [
+  [ToastPosition.TopLeft, 'Top left'],
+  [ToastPosition.TopCenter, 'Top center'],
+  [ToastPosition.TopRight, 'Top right'],
+  [ToastPosition.BottomLeft, 'Bottom left'],
+  [ToastPosition.BottomRight, 'Bottom right'],
+]
+
+function Controls({ position, onPositionChange }) {
+  const { toast, success, error } = useToast()
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+    <main
+      style={{
+        minHeight: '100vh',
+        margin: 0,
+        boxSizing: 'border-box',
+        background: '#f3f4f6',
+        color: '#111827',
+        fontFamily: 'sans-serif',
+        padding: '2rem',
+      }}
+    >
+      <h1>React Toast Kit</h1>
+      <label style={{ display: 'block', marginBottom: '1rem' }}>
+        Position{' '}
+        <select value={position} onChange={(event) => onPositionChange(event.target.value)}>
+          {POSITIONS.map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <button type="button" onClick={() => toast('Normal notification')}>
+          Normal
+        </button>
+        <button type="button" onClick={() => success('Operation successful', 4000)}>
+          Success
+        </button>
+        <button type="button" onClick={() => error('Something went wrong')}>
+          Error
+        </button>
         <button
           type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() =>
+            toast('Custom toast', {
+              duration: 5000,
+              icon: Info,
+              backgroundColor: '#4c1d95',
+              textColor: '#f5f3ff',
+              fontFamily: 'sans-serif',
+              showCloseIcon: true,
+            })
+          }
         >
-          Count is {count}
+          Custom
         </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <button type="button" onClick={() => toast('No close icon', { showCloseIcon: false, hideOnClick: false })}>
+          No close icon
+        </button>
+        <button
+          type="button"
+          onClick={() => toast('Click the toast to hide', { duration: 0, showCloseIcon: false, hideOnClick: true })}
+        >
+          Hide on click
+        </button>
+      </div>
+    </main>
   )
 }
 
-export default App
+export default function App() {
+  const [position, setPosition] = useState(ToastPosition.TopRight)
+
+  return (
+    <ToastProvider position={position}>
+      <Controls position={position} onPositionChange={setPosition} />
+    </ToastProvider>
+  )
+}
