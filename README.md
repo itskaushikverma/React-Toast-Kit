@@ -74,6 +74,18 @@ Styles and animations are injected when a toast renders. There is no CSS file to
 | `hideOnClick`     | Clicking the toast body dismisses it. Defaults to `false`.                                               |
 | `position`        | `ToastPosition.TopLeft`, `TopCenter`, `TopRight`, `BottomLeft`, or `BottomRight`. Defaults to top right. |
 
+## Develop
+
+```bash
+npm install
+npm run dev
+```
+
+One Vite config covers both targets:
+
+- `npm run build` → npm package in `dist/` (`npm publish` runs this)
+- `npm run build:demo` → Vercel site in `dist-demo/` (used by `vercel.json`)
+
 <!-- AUTHOR:START -->
 
 ## 👤 Author
@@ -99,12 +111,3 @@ Styles and animations are injected when a toast renders. There is no CSS file to
   <a href="https://github.com/itskaushikverma/React-Toast-Kit"><img src="https://img.shields.io/github/stars/itskaushikverma/React-Toast-Kit?style=social" alt="GitHub stars" /></a>
 </div>
 <!-- AUTHOR:END -->
-
-## Develop
-
-```bash
-npm install
-npm run dev
-```
-
-`npm run build` writes the publishable files to `dist/`. `npm publish` runs that build first.
