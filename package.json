@@ -1,0 +1,73 @@
+{
+  "name": "react-toast-kit-js",
+  "version": "0.1.0",
+  "description": "React toast notifications with a provider and a useToast hook.",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Kaushik Verma",
+    "email": "kaushikverma321@gmail.com",
+    "url": "https://www.kaushikverma.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itskaushikverma/React-Toast-Kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/itskaushikverma/React-Toast-Kit/issues"
+  },
+  "homepage": "https://github.com/itskaushikverma/React-Toast-Kit#readme",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/react-toast-kit-js.cjs",
+  "module": "./dist/react-toast-kit-js.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react-toast-kit-js.js",
+      "require": "./dist/react-toast-kit-js.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --config vite.lib.config.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run lint && npm run format",
+    "preview": "vite preview",
+    "prepare": "husky",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "toast",
+    "notification"
+  ],
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  },
+  "dependencies": {
+    "lucide-react": "^1.59.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@eslint/js": "^10.0.1",
+    "@rolldown/plugin-babel": "^0.2.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^10.13.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "vite": "^8.3.4"
+  }
+}
